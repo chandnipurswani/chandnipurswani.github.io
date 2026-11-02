@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chandni purswani — strategy + ai</title>
+<meta name="description" content="Strategy + AI. 6+ years building personalization and customer data products across the GCC. NYU Stern MBA, Strategy & AI.">
+<meta property="og:title" content="chandni purswani — strategy + ai">
+<meta property="og:description" content="Strategy + AI. Taking ideas from pilot to measurable revenue across the GCC.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0c; --panel:#111113; --line:#1f1f23; --text:#dedad2; --muted:#7a776f; --dim:#4a4843;
+    --accent:#f2b84b; --live:#5ec4b6; --wip:#f2b84b; --plan:#7a776f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg)}
+  body{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text);
+       font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased;padding:56px 24px 80px}
+  .wrap{max-width:980px;margin:0 auto}
+  a{color:inherit;text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:1px dashed var(--accent);outline-offset:3px}
+  ::selection{background:var(--accent);color:var(--bg)}
+
+  .prompt{color:var(--muted);font-size:13px}
+  .prompt b{color:var(--accent);font-weight:500}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--accent);vertical-align:-2px;margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  h1{font-size:clamp(30px,5.2vw,52px);font-weight:700;letter-spacing:-.02em;line-height:1.05;margin:22px 0 10px}
+  h1 .plus{color:var(--accent)}
+  .role{font-size:clamp(15px,2vw,18px);color:var(--text);margin-bottom:18px}
+  .role span{color:var(--accent)}
+  .lede{color:var(--muted);max-width:680px;font-size:14px}
+  .lede strong{color:var(--text);font-weight:500}
+
+  .links{display:flex;flex-wrap:wrap;gap:8px 22px;margin:26px 0 0;font-size:13px}
+  .links a{color:var(--muted);border-bottom:1px solid var(--dim);padding-bottom:1px;transition:color .15s,border-color .15s}
+  .links a:hover{color:var(--accent);border-color:var(--accent)}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:6px;margin:44px 0 52px;overflow:hidden}
+  .stat{padding:18px 18px 16px;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:0}
+  .stat .n{font-size:22px;font-weight:700;color:var(--text)}
+  .stat .l{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:4px}
+
+  .panel{border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);padding:0 14px;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{background:none;border:0;font:inherit;color:var(--dim);padding:16px 16px 14px;cursor:pointer;white-space:nowrap;
+       border-bottom:2px solid transparent;margin-bottom:-1px;font-size:14px;transition:color .15s}
+  .tab .k{font-size:11px;color:var(--dim);margin-right:6px}
+  .tab:hover{color:var(--muted)}
+  .tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab[aria-selected="true"] .k{color:var(--accent);opacity:.7}
+
+  .pane{display:none;padding:10px 0 14px}
+  .pane.on{display:block}
+  .intro{color:var(--muted);font-size:12.5px;padding:12px 26px 6px}
+
+  .row{border-bottom:1px solid transparent}
+  .row + .row{border-top:1px solid var(--line)}
+  .row > button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:230px 1fr 92px;gap:20px;align-items:baseline;
+       width:100%;padding:14px 26px;cursor:pointer}
+  .row > button:hover .name{text-decoration:underline;text-underline-offset:4px}
+  .row > button:focus-visible{outline:1px dashed var(--accent);outline-offset:-4px}
+  .name{color:var(--accent);font-weight:500}
+  .name .sub{display:block;color:var(--muted);font-weight:400;font-size:12px;margin-top:2px}
+  .desc{color:var(--muted)}
+  .tag{font-size:11px;text-align:right;white-space:nowrap}
+  .tag::before{content:"● ";font-size:9px;vertical-align:1px}
+  .tag.live{color:var(--live)} .tag.wip{color:var(--wip)} .tag.plan{color:var(--plan)}
+
+  .detail{display:none;padding:2px 26px 20px 276px;color:var(--muted);font-size:13px}
+  .row.open .detail{display:block}
+  .detail h4{color:var(--text);font-weight:500;font-size:12px;text-transform:lowercase;margin:12px 0 4px}
+  .detail h4::before{content:"// ";color:var(--dim)}
+  .detail ul{list-style:none}
+  .detail li{padding-left:16px;position:relative;margin:3px 0}
+  .detail li::before{content:"–";position:absolute;left:0;color:var(--dim)}
+  .detail a.more{display:inline-block;margin-top:12px;color:var(--accent);border-bottom:1px solid var(--accent)}
+  .detail .note{margin-top:10px;font-size:12px;color:var(--dim)}
+
+  footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:40px;color:var(--dim);font-size:12px}
+  .hint kbd{font:inherit;border:1px solid var(--line);border-radius:3px;padding:0 5px;color:var(--muted)}
+
+  @media (max-width:760px){
+    body{padding:36px 18px 60px;font-size:13.5px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(2){border-right:0}
+    .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+    .row > button{grid-template-columns:1fr auto;gap:4px 12px;padding:14px 18px}
+    .row > button .desc{grid-column:1 / -1;grid-row:2}
+    .tag{grid-row:1;grid-column:2}
+    .detail{padding:0 18px 18px}
+    .intro{padding:12px 18px 6px}
+    .hint{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){.cursor{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="prompt"><b>~/chandni</b> $ whoami<span class="cursor" aria-hidden="true"></span></div>
+    <h1>chandni purswani</h1>
+    <p class="role">strategy <span>+</span> ai — taking ideas from pilot to measurable revenue.</p>
+    <p class="lede">6+ years building personalization and customer data products across the gcc, including an
+      <strong>ai recommendation engine shipped to 1M+ customers</strong> at majid al futtaim.
+      now an nyu stern mba (strategy &amp; ai), building ai tools for my own work and for the people around me.
+      based in abu dhabi.</p>
+    <nav class="links" aria-label="Elsewhere">
+      <a href="https://www.linkedin.com/in/chandni-purswani" target="_blank" rel="noopener">linkedin ↗</a>
+      <a href="https://github.com/chandnipurswani" target="_blank" rel="noopener">github ↗</a>
+      <a href="mailto:cdp336@nyu.edu">email ↗</a>
+    </nav>
+  </header>
+
+  <section class="stats" aria-label="Selected results">
+    <div class="stat"><div class="n">AED 40M+</div><div class="l">annual incremental revenue, measured against control</div></div>
+    <div class="stat"><div class="n">1M+</div><div class="l">customers reached by an ai recommendation rollout</div></div>
+    <div class="stat"><div class="n">3×</div><div class="l">revenue per recipient vs. control on ai-driven journeys</div></div>
+    <div class="stat"><div class="n">100+</div><div class="l">a/b tests run across a 10-brand retail portfolio</div></div>
+  </section>
+
+  <main class="panel">
+    <div class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="t-agents" aria-controls="agents"><span class="k">1</span>agents</button>
+      <button class="tab" role="tab" id="t-projects" aria-controls="projects"><span class="k">2</span>projects</button>
+      <button class="tab" role="tab" id="t-experience" aria-controls="experience"><span class="k">3</span>experience</button>
+      <button class="tab" role="tab" id="t-leadership" aria-controls="leadership"><span class="k">4</span>leadership</button>
+    </div>
+
+    <!-- AGENTS -->
+    <section class="pane" id="agents" role="tabpanel" aria-labelledby="t-agents">
+      <p class="intro">the ai agents i run my own job search on. each one drafts; i decide. nothing is sent or saved without my approval.</p>
+
+      <div class="row">
+        <button aria-expanded="false"><span class="name">job-hunter</span><span class="desc">sweeps gcc job boards and target career pages for ai pm, strategy &amp; ops and pmm roles, scores fit, surfaces for review</span><span class="tag live">live</span></button>
+        <div class="detail">
+          <h4>problem</h4><p>gcc roles are spread across linkedin, bayt, gulftalent and dozens of custom career pages. checking them by hand is slow, and the best roles fill fast.</p>
+          <h4>how it works</h4>
+          <ul><li>searches each source and every target company's career page</li><li>scores each role on role type × company fit × freshness</li><li>returns a ranked digest with a direct link to every posting, and only adds rows i approve to my tracker</li></ul>
+          <h4>design choice</h4><p>review-first: a tracker full of half-relevant roles is worse than no tracker.</p>
+          <a class="more" href="https://github.com/chandnipurswani/ai-career-os/tree/main/career/job-hunter" target="_blank" rel="noopener">read the build notes ↗</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <button aria-expanded="false"><span class="name">application-blitz</span><span class="desc">tailors my resume from a bank of approved, fact-checked bullets and reports every requirement it refused to claim</span><span class="tag live">live</span></button>
+        <div class="detail">
+          <h4>problem</h4><p>“tailor my resume” prompts quietly inflate metrics and scope. a resume that doesn't match the interview is worse than an untailored one.</p>
+          <h4>how it works</h4>
+          <ul><li>picks one story for the role: ai pm, strategy &amp; ops, or pmm</li><li>selects and orders evidence only from bullets i've approved</li><li>numbers must survive word-for-word; any rewrite that changes one is rejected</li></ul>
+          <h4>design choice</h4><p>the list of job requirements it declined to claim is the most useful output: it tells me when a role is a stretch.</p>
+          <a class="more" href="https://github.com/chandnipurswani/ai-career-os/tree/main/career/application-blitz" target="_blank" rel="noopener">read the build notes ↗</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <button aria-expanded="false"><span class="name">networking-scout</span><span class="desc">finds and ranks contacts at target companies by shared background, relevance and reachability</span><span class="tag plan">planned</span></button>
+        <div class="detail">
+          <h4>problem</h4><p>in the gcc, warm introductions matter more than applications. the question is who to ask first.</p>
+          <h4>how it works</h4>
+          <ul><li>starts from my own exported connections plus public search, not scraping</li><li>boosts nyu, majid al futtaim and nexa ties</li><li>writes a two-line, specific reason to reach out to each person</li></ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <button aria-expanded="false"><span class="name">relationship-nurture</span><span class="desc">surfaces who's going cold and drafts a context-aware follow-up as a gmail draft</span><span class="tag plan">planned</span></button>
+        <div class="detail">
+          <h4>problem</h4><p>the people who helped you are easy to lose touch with while you're busy recruiting.</p>
+          <h4>how it works</h4>
+          <ul><li>strong / warm / cold cadence from the last real conversation</li><li>drafts the follow-up from notes on what we discussed</li><li>drafts only. it never sends anything.</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="pane" id="projects" role="tabpanel" aria-labelledby="t-projects">
+      <p class="intro">ai products built to be useful to someone other than me.</p>
+
+      <div class="row">
+        <button aria-expanded="false"><span class="name">uae-services-navigator<span class="sub">public-sector ai</span></span><span class="desc">answers newcomers' questions on emirates id, visas and trade licences from official government sources, in english or arabic, with citations</span><span class="tag plan">planned</span></button>
+        <div class="detail">
+          <h4>who it's for</h4><p>new residents and small-business founders navigating uae government services for the first time.</p>
+          <h4>design choices</h4>
+          <ul><li>answers only from official pages, and shows the source for every answer</li><li>says “i don't know” rather than guessing on legal or visa questions</li><li>bilingual from day one</li></ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <button aria-expanded="false"><span class="name">pilot-to-production<span class="sub">enterprise ai strategy</span></span><span class="desc">a scorecard that rates an ai pilot on data, ownership, integration and metrics, then returns a readiness score and next steps</span><span class="tag plan">planned</span></button>
+        <div class="detail">
+          <h4>why</h4><p>most enterprise ai never leaves the pilot stage. the blockers are usually organizational, not technical: no owner, no baseline, no integration path.</p>
+          <h4>how it works</h4>
+          <ul><li>a short structured assessment a team can complete in ten minutes</li><li>a weighted readiness score across six dimensions</li><li>a prioritized list of what to fix before scaling</li></ul>
+        </div>
+      </div>
+
+      <div class="row">
+        <button aria-expanded="false"><span class="name">aldar-macro-signals<span class="sub">mba consulting · aldar properties</span></span><span class="desc">two ai product prototypes for aldar: a macro interest-rate signals tool for the treasury team, and a peer benchmarking tool</span><span class="tag wip">in progress</span></button>
+        <div class="detail">
+          <h4>context</h4><p>an nyu stern consulting engagement with one of the uae's largest real estate developers.</p>
+          <h4>what i'm building</h4>
+          <ul><li>a tool that tracks macro news and rate movements and turns them into signals the treasury team can act on</li><li>a peer benchmarking tool</li></ul>
+          <p class="note">client work: details shared at the level the engagement allows.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="pane" id="experience" role="tabpanel" aria-labelledby="t-experience">
+      <div class="row">
+        <button aria-expanded="false"><span class="name">majid al futtaim<span class="sub">2022 — 2025 · dubai</span></span><span class="desc">cvm &amp; marketing automation manager. personalization, customer data and experimentation across a 10-brand retail portfolio</span><span class="tag live">product</span></button>
+        <div class="detail">
+          <ul>
+            <li>scaled maf lifestyle's cvm program, a group priority, from a pilot to 10+ international brands: aed 40M+ annual incremental revenue, measured against control</li>
+            <li>owned the rollout of a third-party ai recommendation engine in email to 1M+ customers; revenue per recipient was 3× control on cart abandonment, onboarding and reactivation</li>
+            <li>defined business, data and integration requirements for an enterprise cdp across 10+ brands</li>
+            <li>built an experimentation framework: 100+ a/b tests, lifting ctr 9% and conversion 7% vs. control</li>
+            <li>piloted the targeting and measurement model on a lululemon acquisition campaign: aed 2.8M incremental revenue, 15.3× romi; won maf's best 360 marketing campaign award and became the reference use case for the group cvm program</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <button aria-expanded="false"><span class="name">nexa digital<span class="sub">2019 — 2022 · dubai</span></span><span class="desc">digital solutions manager. customer platform builds and demand generation for b2b and b2c clients</span><span class="tag live">consulting</span></button>
+        <div class="detail">
+          <ul>
+            <li>led end-to-end customer platform builds across sales, marketing and service, managing a 3-person team</li>
+            <li>demand-generation programs including £4.2M pipeline for jll and £1.8M in sales for savills</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <button aria-expanded="false"><span class="name">steelsky ventures<span class="sub">2026 · mba consulting</span></span><span class="desc">built a live diligence model and defined a gcc health tech investment strategy for a u.s. healthcare vc fund</span><span class="tag live">vc</span></button>
+        <div class="detail"><ul><li>mapped white spaces and priority opportunities in gcc health tech</li></ul></div>
+      </div>
+      <div class="row">
+        <button aria-expanded="false"><span class="name">nyu stern<span class="sub">mba · 2026 · abu dhabi</span></span><span class="desc">strategy &amp; artificial intelligence. gpa 3.85, 75% merit scholarship. ba economics, nyu new york</span><span class="tag live">dec 2026</span></button>
+        <div class="detail"><ul><li>pspo ii certified</li><li>tools: sql, power bi, ga4, figma, jira, salesforce, braze</li></ul></div>
+      </div>
+    </section>
+
+    <!-- LEADERSHIP -->
+    <section class="pane" id="leadership" role="tabpanel" aria-labelledby="t-leadership">
+      <div class="row">
+        <button aria-expanded="false"><span class="name">ai &amp; technology club<span class="sub">co-president · nyu stern abu dhabi</span></span><span class="desc">organized 6 events, including panels, workshops and tech treks</span><span class="tag live">2026</span></button>
+        <div class="detail"><ul><li>planned: an open-source workshop so classmates can fork these career agents for their own search</li></ul></div>
+      </div>
+      <div class="row">
+        <button aria-expanded="false"><span class="name">cxo speaker series<span class="sub">interviewer · nyu abu dhabi</span></span><span class="desc">on-stage interviews with regional executives for the mba cohort, including youssef salem, cfo of adnoc drilling</span><span class="tag live">2026</span></button>
+        <div class="detail"><ul><li>opened and ran the conversation end to end: research, question design and live moderation</li></ul></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>built with claude · hosted on github pages</span>
+    <span class="hint">navigate: <kbd>1</kbd>–<kbd>4</kbd> or <kbd>←</kbd> <kbd>→</kbd></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var ids=tabs.map(function(t){return t.getAttribute('aria-controls')});
+  function show(i,push){
+    tabs.forEach(function(t,j){
+      var on=j===i; t.setAttribute('aria-selected',on); t.tabIndex=on?0:-1;
+      document.getElementById(ids[j]).classList.toggle('on',on);
+    });
+    if(push) history.replaceState(null,'','#'+ids[i]);
+  }
+  tabs.forEach(function(t,i){t.addEventListener('click',function(){show(i,true)})});
+  var start=ids.indexOf(location.hash.slice(1)); show(start<0?0:start,false);
+  document.addEventListener('keydown',function(e){
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var cur=tabs.findIndex(function(t){return t.getAttribute('aria-selected')==='true'});
+    var n=parseInt(e.key,10);
+    if(n>=1&&n<=tabs.length){show(n-1,true);tabs[n-1].focus();}
+    else if(e.key==='ArrowRight'&&document.activeElement.classList.contains('tab')){var k=(cur+1)%tabs.length;show(k,true);tabs[k].focus();}
+    else if(e.key==='ArrowLeft'&&document.activeElement.classList.contains('tab')){var k2=(cur-1+tabs.length)%tabs.length;show(k2,true);tabs[k2].focus();}
+  });
+  [].forEach.call(document.querySelectorAll('.row > button'),function(b){
+    b.addEventListener('click',function(){
+      var r=b.parentNode, open=!r.classList.contains('open');
+      r.classList.toggle('open',open); b.setAttribute('aria-expanded',open);
+    });
+  });
+})();
+</script>
+</body>
+</html>
